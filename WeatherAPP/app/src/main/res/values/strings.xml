@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Weather APP</string>
+    <string name="title">Get Weather</string>
+    <string name="result">Weather</string>
+    <string name="des">Description</string>
+    <string name="temp">Temperature</string>
+</resources>
