@@ -33,11 +33,6 @@ public class details extends AppCompatActivity {
     String latitude22 = "";
     String longitude22 = "";
 
-
-    String baseURL = "http://api.openweathermap.org/data/2.5/weather?q=";
-    String Api = "&appid=e49d9f88297ef678ede51cbe15bed56a";
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
