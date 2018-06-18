@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
                 cityname = city.getText().toString();
                 cityname = cityname.replaceAll("\\s","%20");
 
-                //if city name is not null
+                //if city is not null
                 if(cityname.isEmpty() == false) {
                     String myURL = baseURL + cityname + Api;
                     //Log.i("URL", "URl " + myURL);
