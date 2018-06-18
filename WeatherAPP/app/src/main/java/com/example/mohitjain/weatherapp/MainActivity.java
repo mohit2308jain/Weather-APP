@@ -1,8 +1,8 @@
 package com.example.mohitjain.weatherapp;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,12 +25,16 @@ public class MainActivity extends AppCompatActivity {
     EditText city;
     TextView result;
     ImageView image;
-    TextView des;
+    Button des;
     TextView temp1;
     String cityname = "";
     String state = "";
     String description = "";
     String temperature = "";
+    String pressure22 = "";
+    String humid22 = "";
+    String latitude22 = "";
+    String longitude22 = "";
 
     String baseURL = "http://api.openweathermap.org/data/2.5/weather?q=";
     String Api = "&appid=e49d9f88297ef678ede51cbe15bed56a";
@@ -51,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
         temp1 = (TextView)findViewById(R.id.temp);
 
-        des = (TextView)findViewById(R.id.des);
+        des = (Button)findViewById(R.id.des);
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
                 cityname = city.getText().toString();
                 cityname = cityname.replaceAll("\\s","%20");
 
-                //if city is not null
+                //if city name is not null
                 if(cityname.isEmpty() == false) {
                     String myURL = baseURL + cityname + Api;
                     //Log.i("URL", "URl " + myURL);
@@ -75,7 +79,6 @@ public class MainActivity extends AppCompatActivity {
 
                                     try {
                                         String info = response.getString("weather");
-                                        //Log.i("Info","INFOOO" + info);
 
                                         //Jsonarray for getting description info and weather info
                                         JSONArray ar = new JSONArray(info);
@@ -85,17 +88,27 @@ public class MainActivity extends AppCompatActivity {
 
                                             state = parObj.getString("main");
                                             description = parObj.getString("description");
-
                                         }
                                         state = state.toUpperCase();
                                         description = description.toUpperCase();
 
-                                        //Json object fr getting temperature from website
+
+                                        //Json object fr getting coordinates from website
+                                        JSONObject co1 = new JSONObject(response.getString("coord"));
+                                        latitude22 = co1.getString("lat");
+                                        longitude22 = co1.getString("lon");
+
+
+                                        //Json object fr getting temperature, preesure and humidity from website
                                         JSONObject co = new JSONObject(response.getString("main"));
                                         double keltemp = co.getDouble("temp");
                                         double celtemp = keltemp - 273.15;
 
                                         temperature = String.format("%.2f Celsius",celtemp).toString();
+
+                                        pressure22 = co.getString("pressure");
+                                        humid22 = co.getString("humidity");
+
 
                                         //switch statement to change the image according to weather condition
                                         switch (state){
@@ -132,11 +145,10 @@ public class MainActivity extends AppCompatActivity {
                                                 break;
                                         }
 
+
                                         //finally to display information on screen
                                         result.setText(state);
                                         temp1.setText(temperature);
-                                        des.setText(description);
-
                                     }
                                     catch (JSONException e) {
                                         e.printStackTrace();
@@ -148,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
                                 //if we don't get response from website
                                 @Override
                                 public void onErrorResponse(VolleyError error) {
-                                    Log.i("ERROR", "Something went wrong" + error);
+                                    Toast.makeText(MainActivity.this, "Internet Connection Unavailable.", Toast.LENGTH_SHORT).show();
                                 }
                             }
                     );
@@ -159,6 +171,20 @@ public class MainActivity extends AppCompatActivity {
                 else if(cityname.isEmpty()||cityname.matches("Enter your City...")){
                     Toast.makeText(MainActivity.this, "Please enter city...", Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+
+        des.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, details.class);
+                intent.putExtra("111", description);
+                intent.putExtra("222", temperature);
+                intent.putExtra("333", pressure22);
+                intent.putExtra("444", humid22);
+                intent.putExtra("555", latitude22);
+                intent.putExtra("666", longitude22);
+                startActivity(intent);
             }
         });
 
