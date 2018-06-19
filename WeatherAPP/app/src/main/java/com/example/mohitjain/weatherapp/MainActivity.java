@@ -166,7 +166,6 @@ public class MainActivity extends AppCompatActivity {
                     );
                     MySingleton.getInstance(MainActivity.this).addToRequestQueue(jsonObjectRequest);
                 }
-
                 //if city name is not entered
                 else if(cityname.isEmpty()||cityname.matches("Enter your City...")){
                     Toast.makeText(MainActivity.this, "Please enter city...", Toast.LENGTH_SHORT).show();
@@ -187,10 +186,5 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-
-
-
-
     }
 }
