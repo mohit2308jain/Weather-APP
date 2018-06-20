@@ -1,8 +1,15 @@
 package mohitjain.getweather;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.provider.Settings;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -40,11 +47,51 @@ public class MainActivity extends AppCompatActivity {
     String baseURL = "http://api.openweathermap.org/data/2.5/weather?q=";
     String Api = "&appid=e49d9f88297ef678ede51cbe15bed56a";
 
+    private boolean isOnline() {
+        ConnectivityManager cm =
+                (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnected();
+        if(isConnected) {
+            Log.d("Network", "Connected");
+            return true;
+        }
+        else{
+            checkNetworkConnection();
+            Log.d("Network","Not Connected");
+            return false;
+        }
+    }
+
+    public void checkNetworkConnection(){
+        AlertDialog.Builder builder =new AlertDialog.Builder(this);
+        builder.setTitle("No internet Connection");
+        builder.setMessage("Please turn on internet connection to continue");
+        builder.setNegativeButton("close", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                MainActivity.this.finish();
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
         setContentView(R.layout.activity_main);
+
+
+        isOnline();
+        //if (isOnline()==false) {
+          //  MainActivity.this.startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS));
+        //}
+
 
         button = (Button) findViewById(R.id.button);
 
@@ -161,7 +208,7 @@ public class MainActivity extends AppCompatActivity {
                                 //if we don't get response from website
                                 @Override
                                 public void onErrorResponse(VolleyError error) {
-                                    Toast.makeText(MainActivity.this, "Internet Connection Unavailable.", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(MainActivity.this, "PLEASE CHECK THE CITY NAME...", Toast.LENGTH_SHORT).show();
                                 }
                             }
                     );
